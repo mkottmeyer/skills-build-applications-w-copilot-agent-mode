@@ -1,38 +1,50 @@
 
-import React, { useEffect, useState } from 'react';
-
-const API = 'http://localhost:8000/api/';
-
-function ResourceList({ resource }) {
-  const [data, setData] = useState([]);
-  useEffect(() => {
-    fetch(API + resource + '/')
-      .then(res => res.json())
-      .then(json => setData(json.results || json))
-      .catch(() => setData([]));
-  }, [resource]);
-  return (
-    <div>
-      <h2>{resource.charAt(0).toUpperCase() + resource.slice(1)}</h2>
-      <pre style={{textAlign: 'left', background: '#f4f4f4', padding: '1em'}}>
-        {JSON.stringify(data, null, 2)}
-      </pre>
-    </div>
-  );
-}
+import React from 'react';
+import './App.css';
+import { NavLink, Routes, Route } from 'react-router-dom';
+import Activities from './components/Activities';
+import Leaderboard from './components/Leaderboard';
+import Teams from './components/Teams';
+import Users from './components/Users';
+import Workouts from './components/Workouts';
 
 function App() {
-  const [tab, setTab] = useState('users');
-  const resources = ['users', 'teams', 'activities', 'workouts', 'leaderboard'];
   return (
     <div className="App">
-      <h1>OctoFit Tracker Demo</h1>
-      <nav style={{marginBottom: '1em'}}>
-        {resources.map(r => (
-          <button key={r} onClick={() => setTab(r)} style={{marginRight: 8, fontWeight: tab === r ? 'bold' : 'normal'}}>{r}</button>
-        ))}
+      <nav className="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <div className="container-fluid">
+          <NavLink className="navbar-brand" to="/">Octofit Tracker</NavLink>
+          <div className="collapse navbar-collapse">
+            <ul className="navbar-nav me-auto mb-2 mb-lg-0">
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/activities">Activities</NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/leaderboard">Leaderboard</NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/teams">Teams</NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/users">Users</NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink className="nav-link" to="/workouts">Workouts</NavLink>
+              </li>
+            </ul>
+          </div>
+        </div>
       </nav>
-      <ResourceList resource={tab} />
+      <div className="container">
+        <Routes>
+          <Route path="/activities" element={<Activities />} />
+          <Route path="/leaderboard" element={<Leaderboard />} />
+          <Route path="/teams" element={<Teams />} />
+          <Route path="/users" element={<Users />} />
+          <Route path="/workouts" element={<Workouts />} />
+          <Route path="/" element={<h2>Welcome to Octofit Tracker!</h2>} />
+        </Routes>
+      </div>
     </div>
   );
 }
